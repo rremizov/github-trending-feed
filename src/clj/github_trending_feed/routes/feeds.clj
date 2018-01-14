@@ -10,11 +10,6 @@
   (:require [github-trending-feed.formats]
             [github-trending-feed.feed :as feed]))
 
-(defn- absolute-url [request]
-  (let [request-url (req/request-url request)
-        request-path (req/path-info request)]
-    (apply str (take (str/index-of request-url request-path) request-url))))
-
 (defapi feeds-routes
   {:swagger {:ui "/swagger-ui"
              :spec "/swagger.json"
@@ -24,9 +19,8 @@
 
    :formats github-trending-feed.formats/default-formats}
 
-  (GET "/feeds/pocket/" request
+  (GET "/daily/:language/" request
+       :path-params [language :- s/Str]
        :return s/Any
-       :query-params [rss-url :- String]
-       :summary (str "Read URLs from Pocket RSS feed "
-                     "and return RSS feed with URLs of PDFs")
-       (ok (feed/rss (absolute-url request) rss-url))))
+       :summary "Github trending repositories"
+       (ok (feed/daily language))))

@@ -1,7 +1,7 @@
 (defproject github-trending-feed "0.1.0-SNAPSHOT"
 
-  :description "FIXME: write description"
-  :url "http://example.com/FIXME"
+  :description "Github trending repositories RSS feed."
+  :url "https://github.com/rremizov/github-trending-feed"
 
   :dependencies [[bouncer "1.0.0"]
                  [cheshire "5.6.3"]
@@ -12,6 +12,7 @@
                  [com.cemerick/url "0.1.1"]
                  [compojure "1.5.1"]
                  [cprop "0.1.9"]
+                 [enlive "1.1.6"]
                  [luminus-immutant "0.2.2"]
                  [luminus-nrepl "0.1.4"]
                  [markdown-clj "0.9.91"]
@@ -29,7 +30,6 @@
                  [org.webjars/webjars-locator-jboss-vfs "0.1.0"]
                  [ring-middleware-format "0.7.0"]
                  [ring-webjars "0.1.1"]
-                 [ring-wicked-pdf "0.4.2"]
                  [ring/ring-defaults "0.2.1"]
                  [selmer "1.10.0"]]
 
@@ -51,8 +51,6 @@
 
    :prod {:source-paths ["env/prod/clj"]
           :resource-paths ["env/prod/resources"]}
-
-   :prod/heroku [:prod {:resource-paths ^:replace ["env/heroku/prod/resources"]}]
 
    :dev           [:project/dev :profiles/dev]
    :test          [:project/dev :project/test :profiles/test]

@@ -1,7 +1,7 @@
 (ns github-trending-feed.handler
   (:require [compojure.core :refer [routes wrap-routes]]
             [github-trending-feed.routes.feeds :refer [feeds-routes]]
-            [github-trending-feed.routes.pdf :refer [pdf-routes]]
+
             [compojure.route :as route]
             [github-trending-feed.env :refer [defaults]]
             [mount.core :as mount]
@@ -14,7 +14,6 @@
 (def app-routes
   (routes
     #'feeds-routes
-    #'pdf-routes
     (route/not-found "page not found")))
 
 (defn app [] (middleware/wrap-base #'app-routes))

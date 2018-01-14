@@ -1,28 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
     <statusListener class="ch.qos.logback.core.status.NopStatusListener" />
-    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>log/github-trending-feed.log</file>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>log/github-trending-feed.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
-            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-                <maxFileSize>100MB</maxFileSize>
-            </timeBasedFileNamingAndTriggeringPolicy>
-            <!-- keep 30 days of history -->
-            <maxHistory>30</maxHistory>
-        </rollingPolicy>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <!-- encoders are assigned the type
+             ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
         <encoder>
             <charset>UTF-8</charset>
             <pattern>%date{ISO8601} [%thread] %-5level %logger{36} - %msg %n</pattern>
         </encoder>
     </appender>
-    <logger name="org.apache.http" level="warn">
-        <AppenderRef ref="FILE"/>
+    <logger name="org.apache.http" level="INFO">
+        <AppenderRef ref="STDOUT"/>
     </logger>
-    <logger name="org.xnio.nio" level="warn">
-        <AppenderRef ref="FILE"/>
+    <logger name="org.xnio.nio" level="INFO">
+        <AppenderRef ref="STDOUT"/>
     </logger>
     <root level="INFO">
-        <appender-ref ref="FILE" />
+        <appender-ref ref="STDOUT" />
     </root>
 </configuration>

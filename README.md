@@ -1,6 +1,6 @@
 # github-trending-feed
 
-Feed with updates on Github trending repositories
+Github trending repositories RSS feed.
 
 ## Prerequisites
 
@@ -16,4 +16,4 @@ To start a web server for the application, run:
 
 ## License
 
-Copyright © 2016 FIXME
+Copyright © 2018 Roman Remizov
