@@ -15,26 +15,18 @@
    (:body (http/get (str "https://github.com/trending/" language "?since=today")))))
 
 (defn- parse-title [dom]
-  (-> dom (html/select [html/text-node]) string/join string/trim))
+  (->> (html/select dom [:h3 :a html/text-node]) string/join string/trim))
 
-(defn- parse-titles [dom]
-  (map parse-title (html/select dom [:ol.repo-list :li :h3 :a])))
+(defn- parse-description [dom]
+  (->> (html/select dom [:div.py-1 :p]) first :content first string/trim))
 
-(defn- parse-descriptions [dom]
-  (map (comp string/trim first :content) (html/select dom [:ol.repo-list :li :div.py-1 :p])))
-
-(defn- parse-urls [dom]
-  (->> (html/select dom [:ol.repo-list :li :h3 :a])
-       (map #(get-in % [:attrs :href]) )
-       (map #(str "https://github.com" %))))
+(defn- parse-url [dom]
+  (->> (html/select dom [:h3 :a]) first :attrs :href (str "https://github.com")))
 
 (defn- github-trending [language]
-  (let [dom (fetch-github-trending language)]
-    (map vector
-         (parse-titles dom)
-         (parse-urls dom)
-         (parse-descriptions dom)
-         (repeat (tc/to-date (t/today))))))
+  (->> (html/select (fetch-github-trending language) [:ol.repo-list :li])
+       (map (juxt parse-title parse-url parse-description))
+       (map #(conj % (tc/to-date (t/today))))))
 
 (defn daily [language]
   (apply vector
