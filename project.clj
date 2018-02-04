@@ -1,6 +1,8 @@
 (defproject github-trending-feed "0.1.0-SNAPSHOT"
 
-  :description "Github trending repositories RSS feed."
+  :description "RSS feed for github.com/trending"
+  :license {:name "Eclipse Public License"
+            :url "http://www.eclipse.org/legal/epl-v10.html"}
   :url "https://github.com/rremizov/github-trending-feed"
 
   :dependencies [[bouncer "1.0.0"]

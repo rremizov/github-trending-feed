@@ -1,6 +1,6 @@
 # github-trending-feed
 
-Github trending repositories RSS feed.
+RSS feed for https://github.com/trending.
 
 ## Prerequisites
 
