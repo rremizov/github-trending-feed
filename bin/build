@@ -1,0 +1,5 @@
+#!/bin/bash
+# Do not rename, this is required by the heroku buildpack
+
+lein with-profile prod uberjar
+

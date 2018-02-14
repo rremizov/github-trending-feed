@@ -1,0 +1,7 @@
+{
+    "name": "github-trending-feed",
+    "description": "RSS feed for github.com/trending",
+    "success_url": "/swagger-ui",
+    "repository": "https://github.com/rremizov/github-trending-feed",
+    "keywords": ["github", "trending", "feed", "rss"]
+}
