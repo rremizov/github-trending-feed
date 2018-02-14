@@ -18,7 +18,8 @@
   (->> (html/select dom [:h3 :a html/text-node]) string/join string/trim))
 
 (defn- parse-description [dom]
-  (->> (html/select dom [:div.py-1 :p]) first :content first string/trim))
+  (or (some->> (html/select dom [:div.py-1 :p]) first :content first string/trim)
+      ""))
 
 (defn- parse-url [dom]
   (->> (html/select dom [:h3 :a]) first :attrs :href (str "https://github.com")))
