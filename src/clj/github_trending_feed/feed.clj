@@ -32,6 +32,6 @@
 (defn daily [language]
   (apply vector
          (->RSSChannel (str "Github Trending Repositories: " language " Daily")
-                       (str "http://localhost/daily/" language)
+                       (str "https://github.com/trending/" language "/?since=today")
                        (str "Github Trending Repositories: " language " Daily"))
          (map #(apply ->RSSEntry %) (github-trending language))))
