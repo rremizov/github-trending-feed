@@ -37,7 +37,10 @@
 (defn- github-trending [language]
   (->> (html/select (fetch-github-trending language) [:ol.repo-list :li])
        (filter #(not (nil? (parse-stars %))))
-       (map (juxt #(str (parse-title %) " [" (parse-stars %) " stars today]") parse-url parse-description))
+       (map (juxt
+             parse-title
+             parse-url
+             #(string/join "\n" [(str (parse-stars %) " stars today. ") (parse-description %)])))
        (map #(conj % (tc/to-date (t/today))))
        (map #(conj % (render-guid %)))))
 
