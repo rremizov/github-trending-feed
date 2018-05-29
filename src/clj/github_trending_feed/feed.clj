@@ -19,7 +19,7 @@
   (->> (html/select dom [:h3 :a html/text-node]) string/join string/trim))
 
 (defn- parse-stars [dom]
-  (first (re-seq #"\d+ stars today" (str dom))))
+  (some-> (re-seq #"(\d+) stars" (str dom)) first second Integer/parseInt))
 
 (defn- parse-description [dom]
   (or (some->> (html/select dom [:div.py-1 :p]) first :content first string/trim)
@@ -36,7 +36,8 @@
 
 (defn- github-trending [language]
   (->> (html/select (fetch-github-trending language) [:ol.repo-list :li])
-       (map (juxt #(str (parse-title %) " [" (parse-stars %) "]") parse-url parse-description))
+       (filter #(not (nil? (parse-stars %))))
+       (map (juxt #(str (parse-title %) " [" (parse-stars %) " stars today]") parse-url parse-description))
        (map #(conj % (tc/to-date (t/today))))
        (map #(conj % (render-guid %)))))
 
