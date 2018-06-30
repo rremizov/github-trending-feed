@@ -41,7 +41,9 @@
              parse-title
              parse-url
              #(string/join "\n" [(str (parse-stars %) " stars today. ") (parse-description %)])))
-       (map #(conj % (tc/to-date (t/today))))
+       (map #(conj %
+                   (tc/to-date (t/plus (t/with-time-at-start-of-day (t/now))
+                                       (t/seconds (parse-stars %))))))
        (map #(conj % (render-guid %)))))
 
 (defn daily [language]
