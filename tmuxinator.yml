@@ -1,7 +1,0 @@
-project_name: github-trending-feed
-project_root: ~/clojure/github-trending-feed/
-windows:
-  - devserver: lein run
-  - ranger: ranger
-  - shell:
-  - repl: lein repl :connect 7001
