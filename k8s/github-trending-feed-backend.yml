@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: github-trending-feed-backend
+  labels:
+    app: github-trending-feed-backend
+spec:
+  containers:
+    - image: registry.gitlab.com/rremizov/github-trending-feed:latest
+      name: github-trending-feed-backend
+      ports:
+        - containerPort: 3000
+  imagePullSecrets:
+    - name: gitlab
