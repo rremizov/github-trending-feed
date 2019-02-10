@@ -18,4 +18,4 @@ To start a web server for the application, run:
 
 ## License
 
-Copyright © 2018 Roman Remizov
+Copyright © 2018-2019 Roman Remizov
