@@ -1,7 +1,7 @@
-build:
+target/uberjar/github-trending-feed.jar:
 	lein with-profile prod uberjar
 
-docker_build: build
+docker_build: target/uberjar/github-trending-feed.jar
 	docker build -t github-trending-feed -t registry.gitlab.com/rremizov/github-trending-feed .
 
 docker_push: docker_build
