@@ -13,20 +13,30 @@
 
 (defn- fetch-github-trending [language]
   (html/html-snippet
-   (:body (http/get (str "https://github.com/trending/" language "?since=today")))))
+    (:body (http/get (str "https://github.com/trending/" language "?since=today")))))
 
 (defn- parse-title [dom]
-  (->> (html/select dom [:h3 :a html/text-node]) string/join string/trim))
+  (->> (html/select dom [:h1.h3.lh-condensed :a html/text-node]) string/join string/trim))
 
 (defn- parse-stars [dom]
-  (some-> (re-seq #"(\d+) stars" (str dom)) first second Integer/parseInt))
+  (or (some->> (html/select dom [:span.d-inline-block html/text-node])
+               (apply str)
+               (re-seq #"(\d+) stars")
+               last
+               last
+               Integer/parseInt)
+      0))
 
 (defn- parse-description [dom]
-  (or (some->> (html/select dom [:div.py-1 :p]) first :content first string/trim)
+  (or (some-> (html/select dom [:p.my-1.pr-4])
+              first
+              :content
+              first
+              string/trim)
       ""))
 
 (defn- parse-url [dom]
-  (->> (html/select dom [:h3 :a]) first :attrs :href (str "https://github.com")))
+  (->> (html/select dom [:h1.h3.lh-condensed :a]) first :attrs :href (str "https://github.com")))
 
 (defn- md5 [s]
   (format "%032x" (BigInteger. 1 (.digest (MessageDigest/getInstance "MD5") (.getBytes s)))))
@@ -35,12 +45,11 @@
   [{:isPermaLink false} (md5 (str title link (str pubdate)))])
 
 (defn- github-trending [language]
-  (->> (html/select (fetch-github-trending language) [:ol.repo-list :li])
-       (filter #(not (nil? (parse-stars %))))
+  (->> (html/select (fetch-github-trending language) [:div.application-main :article.Box-row])
        (map (juxt
-             parse-title
-             parse-url
-             #(string/join "\n" [(str (parse-stars %) " stars today. ") (parse-description %)])))
+              parse-title
+              parse-url
+              #(string/join "\n" [(str (parse-stars %) " stars today. ") (parse-description %)])))
        (map #(conj %
                    (tc/to-date (t/plus (t/with-time-at-start-of-day (t/now))
                                        (t/seconds (parse-stars %))))))

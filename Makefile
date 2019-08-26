@@ -1,3 +1,9 @@
+devserver:
+	lein run
+
+cljfmt:
+	lein cljfmt fix
+
 target/uberjar/github-trending-feed.jar:
 	lein with-profile prod uberjar
 
