@@ -13,7 +13,7 @@
 
 (defn- fetch-github-trending [language]
   (html/html-snippet
-    (:body (http/get (str "https://github.com/trending/" language "?since=today")))))
+   (:body (http/get (str "https://github.com/trending/" language "?since=today")))))
 
 (defn- parse-title [dom]
   (->> (html/select dom [:h1.h3.lh-condensed :a html/text-node]) string/join string/trim))
@@ -47,9 +47,9 @@
 (defn- github-trending [language]
   (->> (html/select (fetch-github-trending language) [:div.application-main :article.Box-row])
        (map (juxt
-              parse-title
-              parse-url
-              #(string/join "\n" [(str (parse-stars %) " stars today. ") (parse-description %)])))
+             parse-title
+             parse-url
+             #(string/join "\n" [(str (parse-stars %) " stars today. ") (parse-description %)])))
        (map #(conj %
                    (tc/to-date (t/plus (t/with-time-at-start-of-day (t/now))
                                        (t/seconds (parse-stars %))))))

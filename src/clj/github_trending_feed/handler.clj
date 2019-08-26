@@ -8,12 +8,12 @@
             [github-trending-feed.middleware :as middleware]))
 
 (mount/defstate init-app
-                :start ((or (:init defaults) identity))
-                :stop  ((or (:stop defaults) identity)))
+  :start ((or (:init defaults) identity))
+  :stop  ((or (:stop defaults) identity)))
 
 (def app-routes
   (routes
-    #'feeds-routes
-    (route/not-found "page not found")))
+   #'feeds-routes
+   (route/not-found "page not found")))
 
 (defn app [] (middleware/wrap-base #'app-routes))

@@ -20,7 +20,7 @@
    :formats github-trending-feed.formats/default-formats}
 
   (GET "/daily/:language/" request
-       :path-params [language :- s/Str]
-       :return s/Any
-       :summary "Github trending repositories"
-       (ok (feed/daily language))))
+    :path-params [language :- s/Str]
+    :return s/Any
+    :summary "Github trending repositories"
+    (ok (feed/daily language))))
