@@ -46,6 +46,7 @@
 
 (defn- github-trending [language]
   (->> (html/select (fetch-github-trending language) [:div.application-main :article.Box-row])
+       (sort-by (comp - parse-stars))
        (map (juxt
              parse-title
              parse-url
