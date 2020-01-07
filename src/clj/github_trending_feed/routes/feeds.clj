@@ -22,5 +22,5 @@
   (GET "/daily/:language/" request
     :path-params [language :- s/Str]
     :return s/Any
-    :summary "Github trending repositories"
+    :summary "Github Trending repositories"
     (ok (feed/daily language))))

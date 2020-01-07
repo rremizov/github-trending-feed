@@ -16,7 +16,7 @@
    (:body (http/get (str "https://github.com/trending/" language "?since=today")))))
 
 (defn- parse-title [dom]
-  (->> (html/select dom [:h1.h3.lh-condensed :a html/text-node]) string/join string/trim))
+  (string/trim (string/replace (string/join (html/select dom [:h1.h3.lh-condensed :a html/text-node])) #"\s+" " ")))
 
 (defn- parse-stars [dom]
   (or (some->> (html/select dom [:span.d-inline-block html/text-node])
@@ -41,20 +41,26 @@
 (defn- md5 [s]
   (format "%032x" (BigInteger. 1 (.digest (MessageDigest/getInstance "MD5") (.getBytes s)))))
 
-(defn- render-guid [[title link description pubdate]]
-  [{:isPermaLink false} (md5 (str title link (str pubdate)))])
+(defn- render-guid [title link pub-date]
+  [{:isPermaLink false} (md5 (str title link (str pub-date)))])
 
 (defn- github-trending [language]
-  (->> (html/select (fetch-github-trending language) [:div.application-main :article.Box-row])
-       (sort-by (comp - parse-stars))
-       (map (juxt
-             parse-title
-             parse-url
-             #(string/join "\n" [(str (parse-stars %) " stars today. ") (parse-description %)])))
-       (map #(conj %
-                   (tc/to-date (t/plus (t/with-time-at-start-of-day (t/now))
-                                       (t/seconds (parse-stars %))))))
-       (map #(conj % (render-guid %)))))
+  (map
+   (fn [feed-entry]
+     (let [n-stars (parse-stars feed-entry)
+           title (parse-title feed-entry)
+           description (parse-description feed-entry)
+           link (parse-url feed-entry)
+           pub-date (tc/to-date (t/plus (t/with-time-at-start-of-day (t/now))
+                                        (t/seconds n-stars)))]
+       (vector
+        (string/join "" [(str n-stars " stars today. ") title ". " description])
+        link
+        (string/join "\n" [(str n-stars " stars today. ") description])
+        pub-date
+        (render-guid title link pub-date))))
+   (sort-by (comp - parse-stars)
+            (html/select (fetch-github-trending language) [:div.application-main :article.Box-row]))))
 
 (defn daily [language]
   (apply vector
